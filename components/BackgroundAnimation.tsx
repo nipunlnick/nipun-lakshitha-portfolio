@@ -1,6 +1,17 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedY: number;
+  speedX: number;
+  color: string;
+  opacity: number;
+  fadeSpeed: number;
+}
+
 const BackgroundAnimation: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -11,94 +22,114 @@ const BackgroundAnimation: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let animationFrameId: number;
+    let particles: Particle[] = [];
 
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
 
-    window.addEventListener("resize", resize);
-    resize();
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-    // Particle configuration
-    const particles: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-    }[] = [];
-    const particleCount = Math.min(Math.floor((width * height) / 15000), 100); // Responsive count
-    const connectionDistance = 150;
+    // Ember colors: mix of oranges, reds, and yellows
+    const colors = [
+      "255, 69, 0", // OrangeRed
+      "255, 140, 0", // DarkOrange
+      "255, 165, 0", // Orange
+      "255, 215, 0", // Gold
+      "220, 20, 60", // Crimson
+    ];
 
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-      });
-    }
+    const createParticle = (
+      x?: number,
+      y?: number,
+      isMouse?: boolean
+    ): Particle => {
+      const size = Math.random() * (isMouse ? 2.5 : 3) + 1; // Size between 1 and 4
+      const pX = x !== undefined ? x : Math.random() * canvas.width;
+      const pY = y !== undefined ? y : canvas.height + size; // Start just below screen
+      const speedY = Math.random() * (isMouse ? 2 : 1.5) + 0.5; // Upward speed
+      const speedX = (Math.random() - 0.5) * (isMouse ? 1.5 : 0.5); // Slight drift
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const opacity = Math.random() * 0.5 + 0.2; // Initial opacity
+      const fadeSpeed = Math.random() * (isMouse ? 0.02 : 0.002) + 0.001;
+
+      return { x: pX, y: pY, size, speedY, speedX, color, opacity, fadeSpeed };
+    };
+
+    const initParticles = () => {
+      // Create some initial particles scattered on screen so it's not empty start
+      const initialCount = Math.floor((canvas.width * canvas.height) / 15000);
+      for (let i = 0; i < initialCount; i++) {
+        const p = createParticle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height
+        );
+        particles.push(p);
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      for (let i = 0; i < 3; i++) {
+        particles.push(createParticle(e.clientX, e.clientY, true));
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
 
     const animate = () => {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw particles
-      particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
+      // Add new particles occasionally
+      if (Math.random() < 0.15) {
+        // Spawn rate
+        particles.push(createParticle());
+      }
 
-        // Bounce off edges
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-        // Yellow Particles
-        ctx.fillStyle = "rgba(250, 204, 21, 0.5)"; // neon-yellow
+        // Update position
+        p.y -= p.speedY; // Move up
+        p.x += p.speedX; // Drift side to side
+        p.opacity -= p.fadeSpeed; // Fade out
+
+        // Draw particle (glowing orb)
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color}, ${p.opacity})`;
         ctx.fill();
 
-        // Draw connections
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+        // Optional: Add a glow effect
+        // ctx.shadowBlur = 10;
+        // ctx.shadowColor = `rgba(${p.color}, 0.5)`;
 
-          if (dist < connectionDistance) {
-            // Orange fading connection
-            ctx.strokeStyle = `rgba(249, 115, 22, ${
-              1 - dist / connectionDistance
-            })`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
+        // Remove dead particles
+        if (p.opacity <= 0 || p.y < -10) {
+          particles.splice(i, 1);
+          i--;
         }
-      });
+      }
 
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    const animationId = requestAnimationFrame(animate);
+    initParticles();
+    animate();
 
     return () => {
-      window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"
+      className="fixed inset-0 pointer-events-none -z-10 bg-neutral-950"
     />
   );
 };

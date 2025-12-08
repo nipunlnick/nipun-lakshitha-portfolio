@@ -42,3 +42,113 @@
 .animate-blob {
   animation: blob 7s infinite;
 }
+
+/* Glitch Effect Keyframes */
+@keyframes glitch-anim {
+  0% {
+    clip-path: inset(80% 0 0 0);
+    transform: translate(-2px, 1px);
+  }
+  20% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(2px, -1px);
+  }
+  40% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(20% 0 70% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(40% 0 20% 0);
+    transform: translate(-2px, 1px);
+  }
+  100% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(2px, -1px);
+  }
+  20% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(2px, -2px);
+  }
+  60% {
+    clip-path: inset(15% 0 80% 0);
+    transform: translate(-2px, 1px);
+  }
+  80% {
+    clip-path: inset(55% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+  100% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes glitch-skew {
+  0% {
+    transform: skew(0deg);
+  }
+  20% {
+    transform: skew(-2deg);
+  }
+  40% {
+    transform: skew(2deg);
+  }
+  60% {
+    transform: skew(-1deg);
+  }
+  80% {
+    transform: skew(3deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a; /* Match background to hide original text parts */
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff0000;
+  clip-path: inset(44% 0 61% 0);
+  animation: glitch-anim 0.8s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -1px 0 #0000ff;
+  clip-path: inset(50% 0 30% 0);
+  animation: glitch-anim-2 0.8s infinite linear alternate-reverse;
+}
+
+.glitch-active {
+  animation: glitch-skew 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}

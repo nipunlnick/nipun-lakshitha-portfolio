@@ -7,15 +7,36 @@ const Contact: React.FC = () => {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
+    subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulation of form submission
-    console.log("Form submitted:", formState);
-    alert("Thanks for the message! (This is a demo)");
-    setFormState({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      if (response.ok) {
+        alert("Message sent successfully!");
+        setFormState({ name: "", email: "", subject: "", message: "" });
+      } else {
+        alert("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -108,6 +129,25 @@ const Contact: React.FC = () => {
             </div>
             <div>
               <label
+                htmlFor="subject"
+                className="block text-sm font-medium text-neutral-400 mb-1"
+              >
+                Subject
+              </label>
+              <input
+                type="text"
+                id="subject"
+                required
+                value={formState.subject}
+                onChange={(e) =>
+                  setFormState({ ...formState, subject: e.target.value })
+                }
+                className="w-full bg-neutral-950/50 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-yellow focus:ring-1 focus:ring-neon-yellow transition-colors"
+                placeholder="Project Inquiry"
+              />
+            </div>
+            <div>
+              <label
                 htmlFor="message"
                 className="block text-sm font-medium text-neutral-400 mb-1"
               >
@@ -127,20 +167,26 @@ const Contact: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-neon-yellow to-orange-600 text-neutral-900 font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-neon-yellow to-orange-600 text-neutral-900 font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Send Message
-              <Send
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              {isSubmitting ? "Sending..." : "Send Message"}
+              {!isSubmitting && (
+                <Send
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              )}
             </button>
           </form>
         </div>
       </motion.div>
 
       <footer className="mt-20 text-center text-neutral-600 text-sm">
-        <p>© {new Date().getFullYear()} Nipun Lakshitha.</p>
+        <p>
+          © {new Date().getFullYear()} Nipun Lakshitha. Built with React &
+          Tailwind.
+        </p>
       </footer>
     </section>
   );

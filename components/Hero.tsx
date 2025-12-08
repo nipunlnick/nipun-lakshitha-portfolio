@@ -1,10 +1,39 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Download, Github, Linkedin, Mail, ChevronDown } from "lucide-react";
 import { SOCIAL_LINKS } from "../constants";
 
+const ROLES = [
+  "Full Stack Developer",
+  "IoT Enthusiast",
+  "ML Practitioner",
+  "Social Media Strategist",
+  "Event Planner",
+  "Content Creator",
+  "Tech Innovator",
+  "UI/UX Designer",
+  "Mobile App Developer",
+  "AI/LLM Researcher",
+  "Startup Mentor",
+  "Digital Marketing Expert",
+  "Freelance Consultant",
+  "Automation Specialist",
+  "IoT Solutions Architect",
+  "Creative Technologist",
+  "Entrepreneur",
+];
+
 const Hero: React.FC = () => {
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % ROLES.length);
+    }, 2500); // Change role every 2.5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const title = "Hi, I'm Nipun Lakshitha.";
   const letters = Array.from(title);
 
@@ -54,7 +83,7 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.h1
-          className="text-5xl md:text-7xl font-bold mb-6 tracking-tight text-white"
+          className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight text-white"
           variants={container}
           initial="hidden"
           animate="visible"
@@ -66,18 +95,20 @@ const Hero: React.FC = () => {
           ))}
         </motion.h1>
 
-        <motion.h2
-          className="text-xl md:text-2xl text-neutral-400 mb-8 font-light"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
-          <span className="text-neon-orange">Full Stack Developer</span>
-          <span className="mx-3 text-neutral-600">|</span>
-          <span className="text-neon-yellow">IoT Enthusiast</span>
-          <span className="mx-3 text-neutral-600">|</span>
-          <span className="text-neon-amber">ML Practitioner</span>
-        </motion.h2>
+        <div className="h-12 md:h-16 mb-8 overflow-visible relative flex justify-center items-center">
+          <h2
+            className={`text-xl md:text-3xl font-semibold text-neon-orange relative inline-block glitch-wrapper ${
+              true ? "glitch-active" : ""
+            }`}
+          >
+            <span
+              className="glitch-text relative z-10 block"
+              data-text={ROLES[roleIndex]}
+            >
+              {ROLES[roleIndex]}
+            </span>
+          </h2>
+        </div>
 
         <motion.p
           className="text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed text-lg"
@@ -98,7 +129,7 @@ const Hero: React.FC = () => {
           <a
             href="/Resume/PVNLakshitha_Resume.pdf"
             download="PVNLakshitha_Resume.pdf"
-            className="group relative px-8 py-3 bg-white text-neutral-900 font-bold rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95"
+            className="group relative px-8 py-3 bg-neon-yellow text-neutral-900 font-bold rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] active:scale-95"
           >
             <span className="relative z-10 flex items-center gap-2">
               Download CV <Download size={18} />

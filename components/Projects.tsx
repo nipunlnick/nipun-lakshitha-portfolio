@@ -33,10 +33,7 @@ const getCategoryIcon = (category: Project["category"]) => {
 
 const Projects: React.FC = () => {
   return (
-    <section
-      className="py-24 px-4 md:px-10 bg-gradient-to-b from-neutral-950 to-neutral-900/50"
-      id="projects"
-    >
+    <section className="py-24 px-4 md:px-10" id="projects">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

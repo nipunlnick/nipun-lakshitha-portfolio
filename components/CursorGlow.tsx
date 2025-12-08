@@ -15,13 +15,16 @@ const CursorGlow: React.FC = () => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const now = Date.now();
-      // Throttle particle creation to every 20ms
-      // Throttle particle creation to every 8ms for denser trail
-      if (now - lastSpawnTime.current > 8) {
-        const newParticle = { id: now, x: e.clientX, y: e.clientY };
+      // Throttle particle creation to every 30ms (approx 30fps) to prevent React max depth errors
+      if (now - lastSpawnTime.current > 30) {
+        const newParticle = {
+          id: now + Math.random(), // Ensure unique ID even if millis collide
+          x: e.clientX,
+          y: e.clientY,
+        };
         setParticles((prev) => {
           const updated = [...prev, newParticle];
-          if (updated.length > 50) updated.shift(); // Limit max particles for performance
+          if (updated.length > 30) updated.shift(); // Reduce max particles slightly for performance
           return updated;
         });
         lastSpawnTime.current = now;

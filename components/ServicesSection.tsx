@@ -35,19 +35,19 @@ const services = [
       { url: "https://www.facebook.com/sandugraphicsFB", icon: Facebook },
     ],
   },
-  {
-    id: 2,
-    title: "Event Planning & Management",
-    image: "/Image/Eventz.png",
-    company: "EventZ by Roma and Nick",
-    role: "Co-Founder",
-    description:
-      "End-to-end event coordination, logistics management, and digital promotion for seamless experiences.",
-    tags: ["Logistics", "Promotion", "Coordination"],
-    gradient: "from-yellow-500 to-green-500",
-    textColor: "text-green-500",
-    hoverColor: "group-hover:text-green-500",
-  },
+  // {
+  //   id: 2,
+  //   title: "Event Planning & Management",
+  //   image: "/Image/Eventz.png",
+  //   company: "EventZ by Roma and Nick",
+  //   role: "Co-Founder",
+  //   description:
+  //     "End-to-end event coordination, logistics management, and digital promotion for seamless experiences.",
+  //   tags: ["Logistics", "Promotion", "Coordination"],
+  //   gradient: "from-yellow-500 to-green-500",
+  //   textColor: "text-green-500",
+  //   hoverColor: "group-hover:text-green-500",
+  // },
   {
     id: 3,
     title: "Custom Software & AI Solutions",
