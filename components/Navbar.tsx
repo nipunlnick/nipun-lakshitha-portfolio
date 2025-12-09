@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <span className="text-xl font-bold tracking-tighter text-white z-50">
-          pvnipunlakshitha<span className="text-neon-yellow">.com</span>
+          nipunlakshitha<span className="text-neon-yellow">.com</span>
         </span>
 
         {/* Desktop Navigation */}

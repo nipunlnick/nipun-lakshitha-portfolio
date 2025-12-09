@@ -183,10 +183,7 @@ const Contact: React.FC = () => {
       </motion.div>
 
       <footer className="mt-20 text-center text-neutral-600 text-sm">
-        <p>
-          © {new Date().getFullYear()} Nipun Lakshitha. Built with React &
-          Tailwind.
-        </p>
+        <p>© {new Date().getFullYear()} Nipun Lakshitha.</p>
       </footer>
     </section>
   );
