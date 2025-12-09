@@ -15,7 +15,6 @@ const ROLES = [
   "UI/UX Designer",
   "Mobile App Developer",
   "AI/LLM Researcher",
-  "Startup Mentor",
   "Digital Marketing Expert",
   "Freelance Consultant",
   "Automation Specialist",
@@ -67,7 +66,10 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center px-4 md:px-10 overflow-hidden pt-20">
+    <section
+      className="relative min-h-screen flex flex-col justify-center items-center px-4 md:px-10 overflow-hidden pt-20"
+      id="hero"
+    >
       {/* Background Glows */}
       <div className="absolute top-1/4 -left-20 w-72 h-72 bg-neon-orange/20 rounded-full blur-[100px] animate-pulse" />
       <div className="absolute bottom-1/4 -right-20 w-72 h-72 bg-neon-yellow/20 rounded-full blur-[100px] animate-pulse delay-1000" />

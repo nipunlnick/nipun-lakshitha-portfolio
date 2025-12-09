@@ -9,6 +9,7 @@ import ServicesSection from "../components/ServicesSection";
 import Contact from "../components/Contact";
 
 import Navbar from "../components/Navbar";
+import ScrollAchievementManager from "../components/ScrollAchievementManager";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <CursorGlow />
 
       <Navbar />
+      <ScrollAchievementManager />
 
       <main>
         <Hero />
